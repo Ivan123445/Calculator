@@ -10,12 +10,12 @@
 #define OK 0
 #define ERROR (-1)
 
-#define DEFAULT_STACK {NULL, 0, 0};
+#define DEFAULT_STACK {NULL, 0, 0}
 #define ASCII_NUM_OFFSET 48
 
 typedef enum {
-    ERR,
     END,
+    ERR,
     NUM,
     O_BRACKETS,
     C_BRACKETS,
@@ -46,7 +46,8 @@ typedef struct {
     double value;
 } Stack;
 
-void push (Stack **head, Type type, double value);
+void pushl (Stack **head, Type type, double value);
+void push (Stack **head, Stack elem);
 Stack pop (Stack **head);
 void clear_stack(Stack **head);
 void inverse_stack(Stack **head);

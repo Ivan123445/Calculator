@@ -1,6 +1,10 @@
 #include "s21_utils.h"
 
-void push (Stack **head, Type type, double value) {
+void push (Stack **head, Stack elem) {
+    pushl(head, elem.type, elem.value);
+}
+
+void pushl (Stack **head, Type type, double value) {
     Stack *prev = *head;
     *head = calloc(1, sizeof(Stack));
     (*head)->type = type;
@@ -9,8 +13,7 @@ void push (Stack **head, Type type, double value) {
 }
 
 Stack pop (Stack **head) {
-    Stack last = DEFAULT_STACK
-
+    Stack last = DEFAULT_STACK;
     if (head && *head) {
         Stack *new_head = (*head)->prev;
         last.type = (*head)->type;
@@ -22,22 +25,24 @@ Stack pop (Stack **head) {
 }
 
 void clear_stack(Stack **head) {
-    while ((*head)->prev) {
-        Stack *temp = (*head)->prev;
+    if (head && (*head)) {
+        while ((*head)->prev) {
+            Stack *temp = (*head)->prev;
+            free((*head));
+            (*head) = temp;
+        }
         free((*head));
-        (*head) = temp;
     }
-    free((*head));
 }
 
 void inverse_stack(Stack **head) {
     Stack  *new_stack;
     while ((*head)->prev) {
         Stack temp = pop(head);
-        push(&new_stack, temp.type, temp.value);
+        push(&new_stack, temp);
     }
     Stack temp = pop(head);
-    push(&new_stack, temp.type, temp.value);
+    push(&new_stack, temp);
 
     (*head) = new_stack;
 }

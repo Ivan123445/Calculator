@@ -21,46 +21,48 @@ int get_priority(Stack tok) {
 Stack* convert_to_rpn(Stack *tokens) {
     Stack *rpn = NULL, *stack = NULL;
     Stack tok = pop(&tokens);
-    if (tok.type == END) {
-        tok = pop(&tokens);
-    }
 
-    for (; tok.type != END && tok.type != ERR; tok = pop(&tokens)) {
+    for (; tok.type != END && (!rpn || rpn->type != ERR); tok = pop(&tokens)) {
         if (tok.type == NUM) {
-            push(&rpn, tok.type, tok.value);
+            push(&rpn, tok);
         }
         if (tok.type == O_BRACKETS || tok.type >= COS) {
-            push(&stack, tok.type, tok.value);
+            push(&stack, tok);
         }
         if (tok.type >= PLUS && tok.type <= U_MINUS) {
             while (stack && (get_priority(*stack) >= get_priority(tok) ||
                     (get_priority(*stack) == get_priority(tok) && stack->type >= EXP && stack->type <= U_MINUS))) {
-                Stack temp = pop(&stack);
-                push(&rpn, temp.type, temp.value);
+                push(&rpn, pop(&stack));
             }
-            push(&stack, tok.type, tok.value);
+            push(&stack, tok);
         }
         if (tok.type == C_BRACKETS) {
-            while (stack && stack->type != O_BRACKETS && stack->type != ERR) {
-                Stack temp = pop(&stack);
-                push(&rpn, temp.type, temp.value);
+            while (stack && stack->type != O_BRACKETS) {
+                push(&rpn, pop(&stack));
             }
-            pop(&stack);
-            if (stack && stack->type >= COS) {
-                Stack temp = pop(&stack);
-                push(&rpn, temp.type, temp.value);
+            if (stack && stack->type == O_BRACKETS) {
+                pop(&stack);
+                if (stack && stack->type >= COS) {
+                    push(&rpn, pop(&stack));
+                }
+            } else {
+                rpn->type = ERR;
             }
         }
     }
 
     tok = pop(&stack);
-    if (tok.type == O_BRACKETS || tok.type == C_BRACKETS) {
+    for (; tok.type != END && rpn->type != ERR; tok = pop(&stack)){
+        if (tok.type == O_BRACKETS || tok.type == C_BRACKETS) {
+            rpn->type = ERR;
+        } else {
+            push(&rpn, tok);
+        }
+    }
+    if (rpn->type == ERR) {
         clear_stack(&rpn);
         clear_stack(&stack);
-        return NULL;
-    }
-    for (; tok.type != END && tok.type != ERR; tok = pop(&stack)){
-        push(&rpn, tok.type, tok.value);
+        rpn = NULL;
     }
 
     return rpn;
