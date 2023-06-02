@@ -8,5 +8,6 @@
 
 Stack* parse_str(char const *str);
 Stack* convert_to_rpn(Stack *stack);
+double calc_rpn(Stack *rpn, double x);
 
 #endif //C7_SMARTCALC_V1_0_1_S21_CALCULATE_H

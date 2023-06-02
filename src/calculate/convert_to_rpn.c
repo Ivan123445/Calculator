@@ -8,7 +8,7 @@ int get_priority(Stack tok) {
     if (tok.type == MULT || tok.type == DIV || tok.type == MOD) {
         res = 2;
     }
-    if (tok.type == EXP) {
+    if (tok.type == POW) {
         res = 3;
     }
     if (tok.type >= U_PLUS) {
@@ -23,7 +23,7 @@ Stack* convert_to_rpn(Stack *tokens) {
     Stack tok = pop(&tokens);
 
     for (; tok.type != END && (!rpn || rpn->type != ERR); tok = pop(&tokens)) {
-        if (tok.type == NUM) {
+        if (tok.type == NUM || tok.type == X) {
             push(&rpn, tok);
         }
         if (tok.type == O_BRACKETS || tok.type >= COS) {
@@ -31,7 +31,7 @@ Stack* convert_to_rpn(Stack *tokens) {
         }
         if (tok.type >= PLUS && tok.type <= U_MINUS) {
             while (stack && (get_priority(*stack) >= get_priority(tok) ||
-                    (get_priority(*stack) == get_priority(tok) && stack->type >= EXP && stack->type <= U_MINUS))) {
+                    (get_priority(*stack) == get_priority(tok) && stack->type >= POW && stack->type <= U_MINUS))) {
                 push(&rpn, pop(&stack));
             }
             push(&stack, tok);
