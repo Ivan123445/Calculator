@@ -1,18 +1,28 @@
 #include "s21_calculate.h"
 
-Stack* parse_str(char const *str) {
+void comma_to_point(char *str) {
+    for (;str && *str != '\0'; ++str) {
+        if (*str == ',') {
+            *str = '.';
+        }
+    }
+}
+
+int parse_str(char *str, Stack **result) {
     Stack *stack = NULL;
+    comma_to_point(str);
 
     for (; *str != '\0' && (!stack || stack->type != ERR); str++) {
         !strchr(DICTION, *str) ? pushl(&stack, ERR, 0) : 0;
 
-        isddigit(*str) ? pushl(&stack, NUM, scan_decimal(&str, MAX_NUM_LENGTH)) : 0;
+        isddigit(*str) ? pushl(&stack, NUM, scan_decimal(&str, 0)) : 0;
 
+        *str == 'x' ? pushl(&stack, X, 0) : 0;
         *str == '(' ? pushl(&stack, O_BRACKETS, 0) : 0;
         *str == ')' ? pushl(&stack, C_BRACKETS, 0) : 0;
         *str == '*' ? pushl(&stack, MULT, 0) : 0;
         *str == '/' ? pushl(&stack, DIV, 0) : 0;
-        *str == '^' ? pushl(&stack, EXP, 0) : 0;
+        *str == '^' ? pushl(&stack, POW, 0) : 0;
 
         if (*str == '+') {
             if (stack->type == END || stack->type == MULT || stack->type == DIV) {
@@ -93,7 +103,7 @@ Stack* parse_str(char const *str) {
             }
         }
 
-        if (stack->type >= ACOS && stack->type <= ATAN) {
+        if (stack->type >= ACOS && stack->type <= SQRT) {
             str += 3;
         }
         if ((stack->type >= COS && stack->type <= TAN) || stack->type == MOD || stack->type == LOG) {
@@ -104,5 +114,6 @@ Stack* parse_str(char const *str) {
         }
     }
 
-    return stack;
+    *result = stack;
+    return stack->type != ERR ? OK : ERROR;
 }

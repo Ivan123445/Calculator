@@ -17,6 +17,7 @@ typedef enum {
     END,
     ERR,
     NUM,
+    X,
     O_BRACKETS,
     C_BRACKETS,
 
@@ -25,7 +26,7 @@ typedef enum {
     MULT,
     DIV,
     MOD,
-    EXP,
+    POW,
     U_PLUS,
     U_MINUS,
 
@@ -53,6 +54,8 @@ void clear_stack(Stack **head);
 void inverse_stack(Stack **head);
 
 double scan_decimal(const char **str, int width);
+void print_decimal(double decimal, char *str);
+int get_num_len(long long num);
 bool isddigit(char num);
 
 #endif //C7_SMARTCALC_V1_0_1_S21_UTILS_H

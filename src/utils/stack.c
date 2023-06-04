@@ -36,13 +36,11 @@ void clear_stack(Stack **head) {
 }
 
 void inverse_stack(Stack **head) {
-    Stack  *new_stack;
+    Stack  *new_stack = NULL;
     while ((*head)->prev) {
-        Stack temp = pop(head);
-        push(&new_stack, temp);
+        push(&new_stack, pop(head));
     }
-    Stack temp = pop(head);
-    push(&new_stack, temp);
+    push(&new_stack, pop(head));
 
     (*head) = new_stack;
 }

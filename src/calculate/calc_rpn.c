@@ -19,8 +19,8 @@ int calc_bin_op (Stack **stack, Type type) {
             res = second_op.value / first_op.value;
             break;
         case MOD:
-            res = second_op.value / first_op.value;
-            break;  // TODO fix MOD
+            res = fmod(second_op.value, first_op.value);
+            break;
         case POW:
             res = pow(second_op.value, first_op.value);
             break;
@@ -79,6 +79,9 @@ int calc_un_op (Stack **stack, Type type) {
 }
 
 double calc_rpn(Stack *rpn, double x) {
+    if (!rpn) {
+        return 0;
+    }
     Stack tok = pop(&rpn);
     Stack *stack = NULL;
     int flag = OK;

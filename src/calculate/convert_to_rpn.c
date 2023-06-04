@@ -18,13 +18,13 @@ int get_priority(Stack tok) {
     return res;
 }
 
-Stack* convert_to_rpn(Stack *tokens) {
-    Stack *rpn = NULL, *stack = NULL;
+int convert_to_rpn(Stack *tokens, Stack **rpn) {
+    Stack *res = NULL, *stack = NULL;
     Stack tok = pop(&tokens);
 
-    for (; tok.type != END && (!rpn || rpn->type != ERR); tok = pop(&tokens)) {
+    for (; tok.type != END && (!res || res->type != ERR); tok = pop(&tokens)) {
         if (tok.type == NUM || tok.type == X) {
-            push(&rpn, tok);
+            push(&res, tok);
         }
         if (tok.type == O_BRACKETS || tok.type >= COS) {
             push(&stack, tok);
@@ -32,38 +32,39 @@ Stack* convert_to_rpn(Stack *tokens) {
         if (tok.type >= PLUS && tok.type <= U_MINUS) {
             while (stack && (get_priority(*stack) >= get_priority(tok) ||
                     (get_priority(*stack) == get_priority(tok) && stack->type >= POW && stack->type <= U_MINUS))) {
-                push(&rpn, pop(&stack));
+                push(&res, pop(&stack));
             }
             push(&stack, tok);
         }
         if (tok.type == C_BRACKETS) {
             while (stack && stack->type != O_BRACKETS) {
-                push(&rpn, pop(&stack));
+                push(&res, pop(&stack));
             }
             if (stack && stack->type == O_BRACKETS) {
                 pop(&stack);
                 if (stack && stack->type >= COS) {
-                    push(&rpn, pop(&stack));
+                    push(&res, pop(&stack));
                 }
             } else {
-                rpn->type = ERR;
+                res->type = ERR;
             }
         }
     }
 
     tok = pop(&stack);
-    for (; tok.type != END && rpn->type != ERR; tok = pop(&stack)){
+    for (; tok.type != END && res->type != ERR; tok = pop(&stack)){
         if (tok.type == O_BRACKETS || tok.type == C_BRACKETS) {
-            rpn->type = ERR;
+            res->type = ERR;
         } else {
-            push(&rpn, tok);
+            push(&res, tok);
         }
     }
-    if (rpn->type == ERR) {
-        clear_stack(&rpn);
+    if (res->type == ERR) {
+        clear_stack(&res);
         clear_stack(&stack);
-        rpn = NULL;
+        res = NULL;
     }
 
-    return rpn;
+    *rpn = res;
+    return res->type != ERR ? OK : ERROR;
 }

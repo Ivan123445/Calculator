@@ -36,10 +36,13 @@ static GtkWidget* create_window (void) {
 
 G_MODULE_EXPORT void add_symb_to_str(GtkButton *button, gpointer label) {
     char ch = gtk_button_get_label(button)[0];
-    if (strchr(INP_DICTION, ch)) {
-        gtk_entry_buffer_insert_text(gtk_entry_get_buffer(label), -1, &ch, 1);
+    GtkEntryBuffer *buf = gtk_entry_get_buffer(label);
+    if (ch == 's') {
+        gtk_entry_buffer_insert_text(buf, -1, "sqrt(", 5);
+    } else if (ch == 'm') {
+        gtk_entry_buffer_insert_text(buf, -1, "mod", 3);
     } else {
-        printf("Wrong char\n");
+        gtk_entry_buffer_insert_text(buf, -1, &ch, 1);
     }
 }
 
@@ -54,15 +57,29 @@ G_MODULE_EXPORT void clear_last_chr(GtkButton *button, gpointer label) {
 
 G_MODULE_EXPORT void calculate(GtkButton *button, gpointer label) {
     char *str = (char*)gtk_entry_get_text(label);
-    printf("%s\n", str);
+    Stack *stack = NULL;
+    Stack *rpn = NULL;
+    int status;
+    double num;
+    char output_str[MAX_LENGTH_INPUT];
 
-    Stack *stack = parse_str(str);
-    inverse_stack(&stack);
-    Stack *rpn = convert_to_rpn(stack);
-    inverse_stack(&rpn);
-    printf("Res:%f\n", calc_rpn(rpn, 11));
+    if (parse_str(str, &stack) == OK) {
+        inverse_stack(&stack);
+        if (convert_to_rpn(stack, &rpn)) {
+            inverse_stack(&rpn);
+            if (calc_rpn(rpn, 11) == OK) {
+                sprintf(output_str, "%g", num);
+            } else {
+                sprintf(output_str,"Calculation error");
+            }
+        } else {
+            sprintf(output_str,"Wrong expression");
+        }
+    } else {
+        sprintf(output_str,"Wrong symb");
+    }
 
-//    gtk_entry_set_text(label, itoa())
+    gtk_entry_set_text(label, output_str);
 }
 
 /* это главная функция нашего приложения, которая будет выполнена первой */
