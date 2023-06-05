@@ -51,6 +51,7 @@ void pushl (Stack **head, Type type, double value);
 void push (Stack **head, Stack elem);
 Stack pop (Stack **head);
 void clear_stack(Stack **head);
+void copy_stack(Stack **dest, Stack *src);
 void inverse_stack(Stack **head);
 
 double scan_decimal(const char **str, int width);

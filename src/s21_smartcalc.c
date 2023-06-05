@@ -1,7 +1,5 @@
 #include "s21_smartcalc.h"
 
-
-/* создание окна в этот раз мы вынесли в отдельную функцию */
 static GtkWidget* create_window (void) {
     /* это виджет окна */
     GtkWidget *window;
@@ -35,6 +33,10 @@ static GtkWidget* create_window (void) {
 }
 
 G_MODULE_EXPORT void add_symb_to_str(GtkButton *button, gpointer label) {
+    char *str = (char*)gtk_entry_get_text(label);
+    if (!strcmp(str, PARSE_ERR_MESSEAGE) || !strcmp(str, RPN_ERR_MESSEAGE) || !strcmp(str, "0")) {
+        gtk_entry_buffer_delete_text(gtk_entry_get_buffer(label), 0, MAX_LENGTH_INPUT);
+    }
     char ch = gtk_button_get_label(button)[0];
     GtkEntryBuffer *buf = gtk_entry_get_buffer(label);
     if (ch == 's') {
@@ -59,27 +61,80 @@ G_MODULE_EXPORT void calculate(GtkButton *button, gpointer label) {
     char *str = (char*)gtk_entry_get_text(label);
     Stack *stack = NULL;
     Stack *rpn = NULL;
-    int status;
     double num;
     char output_str[MAX_LENGTH_INPUT];
 
     if (parse_str(str, &stack) == OK) {
         inverse_stack(&stack);
-        if (convert_to_rpn(stack, &rpn)) {
+        if (convert_to_rpn(stack, &rpn) == OK) {
             inverse_stack(&rpn);
-            if (calc_rpn(rpn, 11) == OK) {
+            if(calc_rpn(rpn, 1, &num) == OK) {
                 sprintf(output_str, "%g", num);
             } else {
-                sprintf(output_str,"Calculation error");
+                sprintf(output_str,CALC_ERR_MESSEAGE);
             }
         } else {
-            sprintf(output_str,"Wrong expression");
+            sprintf(output_str,RPN_ERR_MESSEAGE);
         }
     } else {
-        sprintf(output_str,"Wrong symb");
+        sprintf(output_str,PARSE_ERR_MESSEAGE);
     }
 
     gtk_entry_set_text(label, output_str);
+}
+
+G_MODULE_EXPORT void create_graph (GtkButton *button, gpointer label) {
+    char *str = (char*)gtk_entry_get_text(label);
+    create_coordinate_file(str, 0, 10, 10);
+
+}
+
+
+int create_function_image( double scale) {
+    int code = OK;
+    char x[40], y[40], plot[70];
+    sprintf(x, "set xrange [%s: %s]",
+            gtk_entry_get_text(GTK_ENTRY(10)),  // x start
+            gtk_entry_get_text(GTK_ENTRY(20)));  // x end
+    sprintf(y, "set yrange [%s: %s]",
+            gtk_entry_get_text(GTK_ENTRY(10)),  // y start
+            gtk_entry_get_text(GTK_ENTRY(10)));  // y end
+    sprintf(plot, "plot \"function.txt~\" title \"scaling: %lf\" ps 0.5", scale);
+    FILE *gnu_plot = popen("gnuplot -persistent", "w");
+    if (gnu_plot != NULL) {
+        char *commands_gnu_plot[] = {"set terminal png enhanced truecolor",
+                                     "set output \"function.png~\"",
+                                     "set decimalsign locale",
+                                     "set xlabel \"x\"",
+                                     "set ylabel \"y\"",
+                                     x,
+                                     y,
+                                     plot,
+                                     "set out"};
+        int i;
+
+        for (i = 0; i < 9; i++) {
+            fprintf(gnu_plot, "%s \n", commands_gnu_plot[i]);
+        }
+        pclose(gnu_plot);
+    } else {
+        code = ERROR;
+    }
+    return code;
+}
+
+void create_graph_window() {
+    GtkWidget *pic = gtk_image_new_from_file("graph.png~");
+    if (pic != NULL) {
+        GtkWidget *func_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+        gtk_window_set_title(GTK_WINDOW(func_window), "Function graph");
+        GtkWidget *grid = gtk_grid_new();
+        gtk_container_add(GTK_CONTAINER(func_window), grid);
+
+        gtk_grid_attach(GTK_GRID(grid), pic, 0, 0, 1, 2);
+
+        gtk_widget_show_all(func_window);
+    }
 }
 
 /* это главная функция нашего приложения, которая будет выполнена первой */

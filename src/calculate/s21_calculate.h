@@ -8,6 +8,10 @@
 
 int parse_str(char *str, Stack **result);
 int convert_to_rpn(Stack *stack, Stack **rpn);
-double calc_rpn(Stack *rpn, double x);
+int calc_rpn(Stack *rpn, double x, double *result);
+
+int calculate_coordinates(char *str, int start, int end, int steps, double **result);
+int create_coordinate_file(char *str, int x_start, int x_end, int step);
+
 
 #endif //C7_SMARTCALC_V1_0_1_S21_CALCULATE_H

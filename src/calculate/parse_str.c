@@ -25,7 +25,7 @@ int parse_str(char *str, Stack **result) {
         *str == '^' ? pushl(&stack, POW, 0) : 0;
 
         if (*str == '+') {
-            if (stack->type == END || stack->type == MULT || stack->type == DIV) {
+            if (stack && (stack->type == END || stack->type == MULT || stack->type == DIV)) {
                 pushl(&stack, U_PLUS, 0);
             } else {
                 pushl(&stack, PLUS, 0);
@@ -33,7 +33,7 @@ int parse_str(char *str, Stack **result) {
 
         }
         if (*str == '-') {
-            if (stack->type == END || stack->type == MULT || stack->type == DIV) {
+            if (stack && (stack->type == END || stack->type == MULT || stack->type == DIV)) {
                 pushl(&stack, U_MINUS, 0);
             } else {
                 pushl(&stack, MINUS, 0);
@@ -115,5 +115,5 @@ int parse_str(char *str, Stack **result) {
     }
 
     *result = stack;
-    return stack->type != ERR ? OK : ERROR;
+    return OK;
 }

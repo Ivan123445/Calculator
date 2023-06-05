@@ -5,28 +5,32 @@ int calc_bin_op (Stack **stack, Type type) {
     Stack second_op = pop(stack);
     double res;
     int status = OK;
-    switch (type) {
-        case PLUS:
-            res = second_op.value + first_op.value;
-            break;
-        case MINUS:
-            res = second_op.value - first_op.value;
-            break;
-        case MULT:
-            res = second_op.value * first_op.value;
-            break;
-        case DIV:
-            res = second_op.value / first_op.value;
-            break;
-        case MOD:
-            res = fmod(second_op.value, first_op.value);
-            break;
-        case POW:
-            res = pow(second_op.value, first_op.value);
-            break;
-        default:
-            status = ERROR;
-            break;
+    if (first_op.type != END && second_op.type != END) {
+        switch (type) {
+            case PLUS:
+                res = second_op.value + first_op.value;
+                break;
+            case MINUS:
+                res = second_op.value - first_op.value;
+                break;
+            case MULT:
+                res = second_op.value * first_op.value;
+                break;
+            case DIV:
+                res = second_op.value / first_op.value;
+                break;
+            case MOD:
+                res = fmod(second_op.value, first_op.value);
+                break;
+            case POW:
+                res = pow(second_op.value, first_op.value);
+                break;
+            default:
+                status = ERROR;
+                break;
+        }
+    } else {
+        status = ERROR;
     }
     pushl(stack, NUM, res);
     return status;
@@ -78,30 +82,32 @@ int calc_un_op (Stack **stack, Type type) {
     return status;
 }
 
-double calc_rpn(Stack *rpn, double x) {
+int calc_rpn(Stack *rpn, double x, double *result) {
     if (!rpn) {
         return 0;
     }
     Stack tok = pop(&rpn);
     Stack *stack = NULL;
-    int flag = OK;
-    for (; flag == OK; tok = pop(&rpn)) {
+    int status = OK;
+    int end_rpn_flag = OK;
+    for (; end_rpn_flag == OK && status == OK; tok = pop(&rpn)) {
         if (tok.type == NUM) {  // num
             push(&stack, tok);
         } else if (tok.type == X) {
             pushl(&stack, NUM, x);
         } else if (tok.type >= U_PLUS) {  // unary op
             if (stack && stack->type == NUM) {
-                flag = calc_un_op(&stack, tok.type);
+                status = calc_un_op(&stack, tok.type);
             }
         } else {  // binary op
-            flag = calc_bin_op(&stack, tok.type);
+            status = calc_bin_op(&stack, tok.type);
         }
         if (!rpn) {
-            flag = ERROR;
+            end_rpn_flag = ERROR;
         }
     }
 
     tok = pop(&stack);
-    return tok.value;
+    *result = tok.value;
+    return status;
 }

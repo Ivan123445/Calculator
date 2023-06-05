@@ -46,25 +46,24 @@ int convert_to_rpn(Stack *tokens, Stack **rpn) {
                     push(&res, pop(&stack));
                 }
             } else {
-                res->type = ERR;
+               res ? res->type = ERR : 0;
             }
         }
     }
 
     tok = pop(&stack);
-    for (; tok.type != END && res->type != ERR; tok = pop(&stack)){
+    for (; tok.type != END && res && res->type != ERR; tok = pop(&stack)){
         if (tok.type == O_BRACKETS || tok.type == C_BRACKETS) {
             res->type = ERR;
         } else {
             push(&res, tok);
         }
     }
-    if (res->type == ERR) {
+    if (!res || res->type == ERR) {
         clear_stack(&res);
         clear_stack(&stack);
-        res = NULL;
     }
 
     *rpn = res;
-    return res->type != ERR ? OK : ERROR;
+    return res && res->type != ERR ? OK : ERROR;
 }
