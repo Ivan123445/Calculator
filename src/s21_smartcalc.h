@@ -13,5 +13,7 @@
 #define CALC_ERR_MESSEAGE "Wrong expression"
 
 G_MODULE_EXPORT void create_graph (GtkButton *button, gpointer label);
+int create_graph_image( double scale);
+void create_graph_window();
 
 #endif //C7_SMARTCALC_V1_0_1_S21_SMARTCALC_H

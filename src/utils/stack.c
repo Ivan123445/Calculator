@@ -36,10 +36,10 @@ void clear_stack(Stack **head) {
 }
 
 void copy_stack(Stack **dest, Stack *src) {
-    for (; src && src->prev; push(dest, *src)) {
+    while (src) {
+        push(dest, *src);
         src = src->prev;
     }
-    push(dest, *src);
     inverse_stack(dest);
 }
 

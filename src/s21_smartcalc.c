@@ -85,25 +85,27 @@ G_MODULE_EXPORT void calculate(GtkButton *button, gpointer label) {
 
 G_MODULE_EXPORT void create_graph (GtkButton *button, gpointer label) {
     char *str = (char*)gtk_entry_get_text(label);
-    create_coordinate_file(str, 0, 10, 10);
+    create_coordinate_file(str, 0, 10, 100);
+    create_graph_image( 5);
+    create_graph_window();
 
 }
 
 
-int create_function_image( double scale) {
+int create_graph_image( double scale) {
     int code = OK;
     char x[40], y[40], plot[70];
     sprintf(x, "set xrange [%s: %s]",
-            gtk_entry_get_text(GTK_ENTRY(10)),  // x start
-            gtk_entry_get_text(GTK_ENTRY(20)));  // x end
+            "0",  // x start
+            "10");  // x end
     sprintf(y, "set yrange [%s: %s]",
-            gtk_entry_get_text(GTK_ENTRY(10)),  // y start
-            gtk_entry_get_text(GTK_ENTRY(10)));  // y end
-    sprintf(plot, "plot \"function.txt~\" title \"scaling: %lf\" ps 0.5", scale);
+            "-1",  // y start
+            "1");  // y end
+    sprintf(plot, "plot \"coordinates.txt\" title \"scaling: %lf\" ps 0.5", scale);
     FILE *gnu_plot = popen("gnuplot -persistent", "w");
     if (gnu_plot != NULL) {
         char *commands_gnu_plot[] = {"set terminal png enhanced truecolor",
-                                     "set output \"function.png~\"",
+                                     "set output \"graph.png\"",
                                      "set decimalsign locale",
                                      "set xlabel \"x\"",
                                      "set ylabel \"y\"",
@@ -124,7 +126,7 @@ int create_function_image( double scale) {
 }
 
 void create_graph_window() {
-    GtkWidget *pic = gtk_image_new_from_file("graph.png~");
+    GtkWidget *pic = gtk_image_new_from_file("graph.png");
     if (pic != NULL) {
         GtkWidget *func_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
         gtk_window_set_title(GTK_WINDOW(func_window), "Function graph");
