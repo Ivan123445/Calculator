@@ -2,6 +2,7 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
+  <!-- interface-css-provider-path common.css -->
   <object class="GtkWindow" id="window">
     <property name="can-focus">False</property>
     <property name="title" translatable="yes">SmartCalc</property>
@@ -14,12 +15,12 @@
         <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
         <child>
-          <!-- n-columns=1 n-rows=2 -->
-          <object class="GtkGrid">
+          <!-- n-columns=2 n-rows=3 -->
+          <object class="GtkGrid" id="Input_grid">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <child>
-              <object class="GtkEntry" id="x_scale">
+              <object class="GtkEntry" id="x_start">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="hexpand">True</property>
@@ -27,7 +28,7 @@
                 <property name="max-length">255</property>
                 <property name="width-chars">1</property>
                 <property name="max-width-chars">1</property>
-                <property name="placeholder-text" translatable="yes">X Scale</property>
+                <property name="placeholder-text" translatable="yes">X start</property>
               </object>
               <packing>
                 <property name="left-attach">0</property>
@@ -35,7 +36,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="y_scale">
+              <object class="GtkEntry" id="x_end">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="hexpand">True</property>
@@ -43,11 +44,65 @@
                 <property name="max-length">255</property>
                 <property name="width-chars">1</property>
                 <property name="max-width-chars">1</property>
-                <property name="placeholder-text" translatable="yes">Y Scale</property>
+                <property name="placeholder-text" translatable="yes">X end</property>
               </object>
               <packing>
                 <property name="left-attach">0</property>
                 <property name="top-attach">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="input_data">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="has-focus">True</property>
+                <property name="is-focus">True</property>
+                <property name="has-default">True</property>
+                <property name="max-length">255</property>
+                <property name="width-chars">1</property>
+                <property name="max-width-chars">1</property>
+                <property name="placeholder-text" translatable="yes">Input expression</property>
+                <signal name="changed" handler="check_entry" swapped="no"/>
+                <style>
+                  <class name=" .header {color: #e1e1e1;}"/>
+                </style>
+              </object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">2</property>
+                <property name="width">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="y_end">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+                <property name="max-length">255</property>
+                <property name="width-chars">1</property>
+                <property name="max-width-chars">1</property>
+                <property name="placeholder-text" translatable="yes">Y end</property>
+              </object>
+              <packing>
+                <property name="left-attach">1</property>
+                <property name="top-attach">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="y_start">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+                <property name="max-length">255</property>
+                <property name="width-chars">1</property>
+                <property name="max-width-chars">1</property>
+                <property name="placeholder-text" translatable="yes">Y start</property>
+              </object>
+              <packing>
+                <property name="left-attach">1</property>
+                <property name="top-attach">0</property>
               </packing>
             </child>
           </object>
@@ -58,25 +113,8 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="input_data">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="has-focus">True</property>
-            <property name="has-default">True</property>
-            <property name="max-length">255</property>
-            <property name="width-chars">1</property>
-            <property name="max-width-chars">1</property>
-            <property name="placeholder-text" translatable="yes">Input</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
-        <child>
           <!-- n-columns=5 n-rows=5 -->
-          <object class="GtkGrid">
+          <object class="GtkGrid" id="Button_grid">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="row-homogeneous">True</property>
@@ -88,6 +126,9 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <signal name="clicked" handler="clear_str" object="input_data" swapped="no"/>
+                <style>
+                  <class name="func_button"/>
+                </style>
               </object>
               <packing>
                 <property name="left-attach">0</property>
@@ -101,6 +142,9 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <signal name="clicked" handler="add_symb_to_str" object="input_data" swapped="no"/>
+                <style>
+                  <class name="number_button"/>
+                </style>
               </object>
               <packing>
                 <property name="left-attach">0</property>
@@ -114,6 +158,9 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <signal name="clicked" handler="add_symb_to_str" object="input_data" swapped="no"/>
+                <style>
+                  <class name="number_button"/>
+                </style>
               </object>
               <packing>
                 <property name="left-attach">0</property>
@@ -127,6 +174,9 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <signal name="clicked" handler="add_symb_to_str" object="input_data" swapped="no"/>
+                <style>
+                  <class name="number_button"/>
+                </style>
               </object>
               <packing>
                 <property name="left-attach">0</property>
@@ -140,6 +190,9 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <signal name="clicked" handler="add_symb_to_str" object="input_data" swapped="no"/>
+                <style>
+                  <class name="number_button"/>
+                </style>
               </object>
               <packing>
                 <property name="left-attach">0</property>
@@ -153,6 +206,9 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <signal name="clicked" handler="add_symb_to_str" object="input_data" swapped="no"/>
+                <style>
+                  <class name="func_button"/>
+                </style>
               </object>
               <packing>
                 <property name="left-attach">1</property>
@@ -166,6 +222,9 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <signal name="clicked" handler="add_symb_to_str" object="input_data" swapped="no"/>
+                <style>
+                  <class name="number_button"/>
+                </style>
               </object>
               <packing>
                 <property name="left-attach">1</property>
@@ -179,6 +238,9 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <signal name="clicked" handler="add_symb_to_str" object="input_data" swapped="no"/>
+                <style>
+                  <class name="number_button"/>
+                </style>
               </object>
               <packing>
                 <property name="left-attach">1</property>
@@ -192,6 +254,9 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <signal name="clicked" handler="add_symb_to_str" object="input_data" swapped="no"/>
+                <style>
+                  <class name="number_button"/>
+                </style>
               </object>
               <packing>
                 <property name="left-attach">1</property>
@@ -205,6 +270,9 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <signal name="clicked" handler="add_symb_to_str" object="input_data" swapped="no"/>
+                <style>
+                  <class name="func_button"/>
+                </style>
               </object>
               <packing>
                 <property name="left-attach">1</property>
@@ -218,6 +286,9 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <signal name="clicked" handler="add_symb_to_str" object="input_data" swapped="no"/>
+                <style>
+                  <class name="func_button"/>
+                </style>
               </object>
               <packing>
                 <property name="left-attach">2</property>
@@ -231,6 +302,9 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <signal name="clicked" handler="add_symb_to_str" object="input_data" swapped="no"/>
+                <style>
+                  <class name="number_button"/>
+                </style>
               </object>
               <packing>
                 <property name="left-attach">2</property>
@@ -244,6 +318,9 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <signal name="clicked" handler="add_symb_to_str" object="input_data" swapped="no"/>
+                <style>
+                  <class name="number_button"/>
+                </style>
               </object>
               <packing>
                 <property name="left-attach">2</property>
@@ -257,6 +334,9 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <signal name="clicked" handler="add_symb_to_str" object="input_data" swapped="no"/>
+                <style>
+                  <class name="number_button"/>
+                </style>
               </object>
               <packing>
                 <property name="left-attach">2</property>
@@ -269,6 +349,9 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
+                <style>
+                  <class name="func_button"/>
+                </style>
               </object>
               <packing>
                 <property name="left-attach">2</property>
@@ -282,6 +365,9 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <signal name="clicked" handler="add_symb_to_str" object="input_data" swapped="no"/>
+                <style>
+                  <class name="func_button"/>
+                </style>
               </object>
               <packing>
                 <property name="left-attach">3</property>
@@ -295,6 +381,9 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <signal name="clicked" handler="add_symb_to_str" object="input_data" swapped="no"/>
+                <style>
+                  <class name="func_button"/>
+                </style>
               </object>
               <packing>
                 <property name="left-attach">3</property>
@@ -308,6 +397,9 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <signal name="clicked" handler="add_symb_to_str" object="input_data" swapped="no"/>
+                <style>
+                  <class name="func_button"/>
+                </style>
               </object>
               <packing>
                 <property name="left-attach">3</property>
@@ -321,6 +413,9 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <signal name="clicked" handler="add_symb_to_str" object="input_data" swapped="no"/>
+                <style>
+                  <class name="func_button"/>
+                </style>
               </object>
               <packing>
                 <property name="left-attach">3</property>
@@ -334,6 +429,9 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <signal name="clicked" handler="add_symb_to_str" object="input_data" swapped="no"/>
+                <style>
+                  <class name="func_button"/>
+                </style>
               </object>
               <packing>
                 <property name="left-attach">3</property>
@@ -347,6 +445,9 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <signal name="clicked" handler="clear_last_chr" object="input_data" swapped="no"/>
+                <style>
+                  <class name="func_button"/>
+                </style>
               </object>
               <packing>
                 <property name="left-attach">4</property>
@@ -360,6 +461,9 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <signal name="clicked" handler="add_symb_to_str" object="input_data" swapped="no"/>
+                <style>
+                  <class name="func_button"/>
+                </style>
               </object>
               <packing>
                 <property name="left-attach">4</property>
@@ -373,6 +477,9 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <signal name="clicked" handler="add_symb_to_str" object="input_data" swapped="no"/>
+                <style>
+                  <class name="func_button"/>
+                </style>
               </object>
               <packing>
                 <property name="left-attach">4</property>
@@ -386,6 +493,9 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <signal name="clicked" handler="calculate" object="input_data" swapped="no"/>
+                <style>
+                  <class name="calculate_button"/>
+                </style>
               </object>
               <packing>
                 <property name="left-attach">4</property>
@@ -398,7 +508,10 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <signal name="clicked" handler="create_graph" object="input_data" swapped="no"/>
+                <signal name="clicked" handler="create_graph" object="Input_grid" swapped="no"/>
+                <style>
+                  <class name="calculate_button"/>
+                </style>
               </object>
               <packing>
                 <property name="left-attach">4</property>

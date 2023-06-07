@@ -64,7 +64,7 @@ G_MODULE_EXPORT void calculate(GtkButton *button, gpointer label) {
     double num;
     char output_str[MAX_LENGTH_INPUT];
 
-    if (parse_str(str, &stack) == OK) {
+    if (strlen(str) && parse_str(str, &stack) == OK) {
         inverse_stack(&stack);
         if (convert_to_rpn(stack, &rpn) == OK) {
             inverse_stack(&rpn);
@@ -83,24 +83,41 @@ G_MODULE_EXPORT void calculate(GtkButton *button, gpointer label) {
     gtk_entry_set_text(label, output_str);
 }
 
-G_MODULE_EXPORT void create_graph (GtkButton *button, gpointer label) {
-    char *str = (char*)gtk_entry_get_text(label);
-    create_coordinate_file(str, 0, 10, 100);
-    create_graph_image( 5);
-    create_graph_window();
+G_MODULE_EXPORT void create_graph (GtkButton *button, gpointer input_grid) {
+    GtkWidget *field_x_start = gtk_grid_get_child_at(input_grid, 0, 0);
+    GtkWidget *field_x_end = gtk_grid_get_child_at(input_grid, 0, 1);
+    GtkWidget *field_y_start = gtk_grid_get_child_at(input_grid, 1, 0);
+    GtkWidget *field_y_end = gtk_grid_get_child_at(input_grid, 1, 1);
+    GtkWidget *field_expression = gtk_grid_get_child_at(input_grid, 0, 2);
+
+    char *str_x_start = (char*)gtk_entry_get_text(field_x_start);
+    char *str_x_end = (char*)gtk_entry_get_text(field_x_end);
+    char *str_y_start = (char*)gtk_entry_get_text(field_y_start);
+    char *str_y_end = (char*)gtk_entry_get_text(field_y_end);
+    char *str_expression = (char*)gtk_entry_get_text(field_expression);
+
+    if (strlen(str_x_start) && strlen(str_x_end) && strlen(str_expression)) {
+        int x_start, x_end;
+        sscanf(str_x_start, "%d", &x_start);
+        sscanf(str_x_end, "%d", &x_end);
+
+        if (create_coordinate_file(str_expression, atoi(str_x_start), atoi(str_x_end), GRAPH_POINTS) == OK) {
+            create_graph_image(str_x_start, str_x_end, str_y_start, str_y_end, 5);
+            create_graph_window();
+        }
+    }
 
 }
 
-
-int create_graph_image( double scale) {
+int create_graph_image(char *x_start, char *x_end, char *y_start, char *y_end, double scale) {
     int code = OK;
     char x[40], y[40], plot[70];
     sprintf(x, "set xrange [%s: %s]",
-            "0",  // x start
-            "10");  // x end
+            x_start,  // x start
+            x_end);  // x end
     sprintf(y, "set yrange [%s: %s]",
-            "-1",  // y start
-            "1");  // y end
+            y_start,  // y start
+            y_end);  // y end
     sprintf(plot, "plot \"coordinates.txt\" title \"scaling: %lf\" ps 0.5", scale);
     FILE *gnu_plot = popen("gnuplot -persistent", "w");
     if (gnu_plot != NULL) {
