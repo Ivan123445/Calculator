@@ -12,7 +12,9 @@ set(CALCULATE_C src/calculate/convert_to_rpn.c
                 src/calculate/calculate_coordinates.c
                 src/calculate/create_coordinate_file.c)
 
-set(GUI_C src/gui/calc.glade
+set(GUI_C   src/gui/calc.glade
+            src/gui/main_window.c
+        src/gui/deposit_calc_window.c
         )
 
 set(UTILS_H src/utils/s21_utils.h)
@@ -28,7 +30,6 @@ set(TEST_C src/test/test.c
 
 add_executable(C7_SmartCalc_v1_0_1
         src/s21_smartcalc.h
-        src/s21_smartcalc.c
 
         ${CALCULATE_H}
         ${CALCULATE_C}
@@ -43,12 +44,11 @@ add_executable(C7_SmartCalc_v1_0_1
 
 add_executable(calculation_test
         src/s21_smartcalc.h
-#        src/s21_smartcalc.c
 
         ${CALCULATE_H}
         ${CALCULATE_C}
 
-        ${GUI_C}
+#        ${GUI_C}
 
         ${UTILS_H}
         ${UTILS_C}
