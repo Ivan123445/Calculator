@@ -123,6 +123,7 @@
                 <property name="width-chars">1</property>
                 <property name="max-width-chars">1</property>
                 <property name="placeholder-text" translatable="yes">Input expression</property>
+                <signal name="activate" handler="calculate" object="Input_grid" swapped="no"/>
                 <signal name="changed" handler="check_entry" swapped="no"/>
                 <style>
                   <class name=" .header {color: #e1e1e1;}"/>
@@ -553,7 +554,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <signal name="clicked" handler="calculate" object="input_data" swapped="no"/>
+                <signal name="clicked" handler="calculate" object="Input_grid" swapped="no"/>
                 <style>
                   <class name="calculate_button"/>
                 </style>

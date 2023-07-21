@@ -18,7 +18,8 @@ int parse_str(char *str, Stack **result) {
       break;
     }
 
-    isddigit(*str) ? pushl(&stack, NUM, scan_decimal(&str, 0)) : 0;
+    isddigit(*str) ? pushl(&stack, NUM, scan_decimal((const char **)&str, 0))
+                   : 0;
 
     *str == 'x' ? pushl(&stack, X, 0) : 0;
     *str == '(' ? pushl(&stack, O_BRACKETS, 0) : 0;
