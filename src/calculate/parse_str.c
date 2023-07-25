@@ -11,15 +11,16 @@ void comma_to_point(char *str) {
 int parse_str(char *str, Stack **result) {
   Stack *stack = NULL;
   comma_to_point(str);
+  char *end_str = str + strlen(str);
 
-  for (; *str != '\0' && (!stack || stack->type != ERR); str++) {
-    if (!strchr(DICTION, *str)) {
+  for (; str < end_str && (!stack || stack->type != ERR); str++) {
+    isddigit(*str) ? pushl(&stack, NUM, scan_decimal((const char **)&str, 0))
+                   : 0;
+
+    if (!strchr(OPERATORS_DICTIONARY, *str)) {
       pushl(&stack, ERR, 0);
       break;
     }
-
-    isddigit(*str) ? pushl(&stack, NUM, scan_decimal((const char **)&str, 0))
-                   : 0;
 
     *str == 'x' ? pushl(&stack, X, 0) : 0;
     *str == '(' ? pushl(&stack, O_BRACKETS, 0) : 0;

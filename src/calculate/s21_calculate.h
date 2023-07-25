@@ -3,7 +3,7 @@
 
 #include "../utils/s21_utils.h"
 
-#define DICTION "1234567890+-*/^.,()asctlnsmx"
+#define OPERATORS_DICTIONARY "+-*/^,()asctlnsmx"
 #define NAME_COORDINATE_FILE "coordinates.txt"
 
 int parse_str(char *str, Stack **result);

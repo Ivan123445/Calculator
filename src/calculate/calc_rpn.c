@@ -3,7 +3,7 @@
 int calc_bin_op(Stack **stack, Type type) {
   Stack first_op = pop(stack);
   Stack second_op = pop(stack);
-  double res;
+  double res = 0;
   int status = OK;
   if (first_op.type != END && second_op.type != END) {
     switch (type) {

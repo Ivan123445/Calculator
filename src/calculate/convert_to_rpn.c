@@ -63,6 +63,7 @@ int convert_to_rpn(Stack *tokens, Stack **rpn) {
   if (!res || res->type == ERR) {
     clear_stack(&res);
     clear_stack(&stack);
+    clear_stack(&tokens);
     res = NULL;
   }
 

@@ -24,6 +24,7 @@ int calculate_coordinates(char *str, int start, int end, int steps,
         x += step;
       }
     }
+    clear_stack(&rpn);
   }
 
   return status;

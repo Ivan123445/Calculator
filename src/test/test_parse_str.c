@@ -91,6 +91,23 @@ START_TEST(parser_6) {
 }
 END_TEST
 
+START_TEST(parser_7) {
+  Stack *res = NULL;
+  const Type tokens[] = {NUM, PLUS, NUM};
+  char *str = "5+5";
+  int size = 3;
+  int code = parse_str(str, &res);
+
+  ck_assert_int_eq(code, OK);
+  for (int i = 0; i < size; ++i) {
+    Stack elem = pop(&res);
+
+    ck_assert_int_eq(elem.type, tokens[i]);
+  }
+  clear_stack(&res);
+}
+END_TEST
+
 Suite *parser_suite() {
   Suite *suite = suite_create("parser_suite");
   TCase *tcase = tcase_create("parser_case");
@@ -101,6 +118,7 @@ Suite *parser_suite() {
   tcase_add_test(tcase, parser_4);
   tcase_add_test(tcase, parser_5);
   tcase_add_test(tcase, parser_6);
+  tcase_add_test(tcase, parser_7);
 
   suite_add_tcase(suite, tcase);
   return suite;

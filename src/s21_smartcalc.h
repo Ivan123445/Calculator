@@ -9,7 +9,6 @@
 
 #define MAX_LENGTH_INPUT 255
 #define GRAPH_POINTS 1e3
-#define DICTION "1234567890+-*/^.,()asctlnsm"
 #define PARSE_ERR_MESSEAGE "Wrong symb"
 #define RPN_ERR_MESSEAGE "Wrong expression"
 #define CALC_ERR_MESSEAGE "Wrong expression"

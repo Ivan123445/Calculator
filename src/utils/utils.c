@@ -3,9 +3,8 @@
 bool isddigit(char num) { return num >= '0' && num <= '9'; }
 
 double scan_decimal(const char **str, int width) {
-  int status = ERROR;
   if (!isddigit(**str) && !strchr("+-.,", **str)) {
-    return status;
+    return ERROR;
   }
   double num = 0;
   const char *end_scan = *str + width;
@@ -15,7 +14,6 @@ double scan_decimal(const char **str, int width) {
     (*str)++;
   }
   if (**str != '.' && (end_scan != *str || !width)) {  // scan first digit
-    status = OK;
     num = **str - ASCII_NUM_OFFSET;
     (*str)++;
   }
@@ -26,8 +24,6 @@ double scan_decimal(const char **str, int width) {
   }
 
   if (**str == '.' && (end_scan != *str || !width)) {  // scan float part
-    status = OK;
-
     (*str)++;
     for (long double i = 0.1; isddigit(**str) && (end_scan != *str || !width);
          (*str)++, i /= 10) {

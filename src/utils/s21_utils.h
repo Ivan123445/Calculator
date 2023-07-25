@@ -42,7 +42,7 @@ typedef enum {
   LOG
 } Type;
 
-typedef struct {
+typedef struct Stack {
   struct Stack *prev;
   Type type;
   double value;
