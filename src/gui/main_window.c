@@ -54,14 +54,22 @@ G_MODULE_EXPORT void clear_last_chr(GtkButton *button, gpointer label) {
   gtk_entry_buffer_delete_text(gtk_entry_get_buffer(label), str_lenght - 1, 1);
 }
 
+G_MODULE_EXPORT void clear_attention(GtkEntry *entry) {
+  char *str = (char *)gtk_entry_get_text(entry);
+  if (!strcmp(str, CALC_ERR_MESSEAGE) || !strcmp(str, RPN_ERR_MESSEAGE) ||
+      !strcmp(str, PARSE_ERR_MESSEAGE)) {
+    gtk_entry_buffer_delete_text(gtk_entry_get_buffer(entry), 0,
+                                 MAX_LENGTH_INPUT);
+  }
+}
+
 G_MODULE_EXPORT void calculate(GtkButton *button, gpointer input_grid) {
-    GtkEntry *label = (GtkEntry*) gtk_grid_get_child_at(input_grid, 0, 2);
+  GtkEntry *label = (GtkEntry *)gtk_grid_get_child_at(input_grid, 0, 2);
   char *str = (char *)gtk_entry_get_text(label);
   Stack *stack = NULL;
   Stack *rpn = NULL;
   double num;
   char output_str[MAX_LENGTH_INPUT];
-
   if (strlen(str) && parse_str(str, &stack) == OK) {
     inverse_stack(&stack);
     if (convert_to_rpn(stack, &rpn) == OK) {
@@ -105,10 +113,6 @@ G_MODULE_EXPORT void create_graph(GtkButton *button, gpointer input_grid) {
       create_graph_window();
     }
   }
-}
-
-G_MODULE_EXPORT void enter_calc (GtkButton *button) {
-    printf("Here\n");
 }
 
 int create_graph_image(char *x_start, char *x_end, char *y_start, char *y_end,
@@ -169,8 +173,9 @@ int main(int argc, char *argv[]) {
 
   window = create_main_window();
   gtk_css_provider_load_from_path(provider, "common.css", &errors);
-    gtk_style_context_add_provider_for_screen(
-            gdk_screen_get_default(), GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+  gtk_style_context_add_provider_for_screen(
+      gdk_screen_get_default(), GTK_STYLE_PROVIDER(provider),
+      GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
   gtk_widget_show(window);
 

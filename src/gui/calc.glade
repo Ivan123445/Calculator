@@ -5,6 +5,9 @@
   <!-- interface-css-provider-path common.css -->
   <object class="GtkWindow" id="Deposit_calc">
     <property name="can-focus">False</property>
+    <property name="title" translatable="yes">DepositCalc</property>
+    <property name="resizable">False</property>
+    <property name="destroy-with-parent">True</property>
     <child>
       <!-- n-columns=2 n-rows=2 -->
       <object class="GtkGrid" id="deposit_grid">
@@ -124,7 +127,7 @@
                 <property name="max-width-chars">1</property>
                 <property name="placeholder-text" translatable="yes">Input expression</property>
                 <signal name="activate" handler="calculate" object="Input_grid" swapped="no"/>
-                <signal name="changed" handler="check_entry" swapped="no"/>
+                <signal name="focus-in-event" handler="clear_attention" swapped="no"/>
                 <style>
                   <class name=" .header {color: #e1e1e1;}"/>
                 </style>
