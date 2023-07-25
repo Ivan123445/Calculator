@@ -28,7 +28,7 @@ ifeq ($(UNAME_S),Linux)
 	LIBS_FLAGS += -lsubunit -lm
 endif
 
-all: clean test build gcov_report dvi dist
+all: clean test build gcov_report dist
 
 apply_clang:
 	cp ../materials/linters/.clang-format .
@@ -37,11 +37,11 @@ apply_clang:
 	rm -f .clang-format
 
 test: apply_clang $(SRC_C_FILES)
-	$(CC) $(BUILD_FLAGS) $(GTK_FLAGS) $(addprefix -I , $(INCLUDES)) $(SRC_C_FILES) $(TEST_C_FILES) -o $(TEST_TARGET) $(LIBS_FLAGS)
+	$(CC) $(BUILD_FLAGS) $(GTK_FLAGS) $(addprefix -I , $(INCLUDES)) utils/*.c calculate/*.c $(TEST_C_FILES) -o $(TEST_TARGET) $(LIBS_FLAGS)
 	./$(TEST_TARGET)
 
 build_test: apply_clang $(SRC_C_FILES)
-	$(CC) $(BUILD_FLAGS) $(GTK_FLAGS) $(addprefix -I , $(INCLUDES)) $(SRC_C_FILES) $(TEST_C_FILES) -o $(TEST_TARGET) $(LIBS_FLAGS)
+	$(CC) $(BUILD_FLAGS) $(GTK_FLAGS) $(addprefix -I , $(INCLUDES)) utils/*.c calculate/*.c $(TEST_C_FILES) -o $(TEST_TARGET) $(LIBS_FLAGS)
 
 build: apply_clang $(SRC_C_FILES)
 	$(CC) $(BUILD_FLAGS) $(GTK_FLAGS) $(addprefix -I , $(INCLUDES)) $(GUI_C_FILES) $(SRC_C_FILES) -o $(EXECUTABLE) $(LIBS_FLAGS) $(GTK_LIBS)
@@ -50,7 +50,7 @@ run: build
 	./$(EXECUTABLE)
 
 gcov_report: apply_clang
-	$(CC) --coverage $(BUILD_FLAGS) $(GTK_FLAGS) $(addprefix -I , $(INCLUDES)) $(SRC_C_FILES) $(TEST_C_FILES) -o $(TEST_TARGET) $(LIBS_FLAGS)
+	$(CC) --coverage $(BUILD_FLAGS) $(GTK_FLAGS) $(addprefix -I , $(INCLUDES)) utils/*.c calculate/*.c $(TEST_C_FILES) -o $(TEST_TARGET) $(LIBS_FLAGS)
 	./$(TEST_TARGET)
 	lcov -t "$(TEST_TARGET)" -o $(TEST_TARGET).info -c -d .
 	genhtml -o report $(TEST_TARGET).info
