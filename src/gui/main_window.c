@@ -50,8 +50,8 @@ G_MODULE_EXPORT void clear_str(GtkButton *button, gpointer label) {
 }
 
 G_MODULE_EXPORT void clear_last_chr(GtkButton *button, gpointer label) {
-  int str_lenght = gtk_entry_buffer_get_length(gtk_entry_get_buffer(label));
-  gtk_entry_buffer_delete_text(gtk_entry_get_buffer(label), str_lenght - 1, 1);
+  unsigned int str_length = gtk_entry_buffer_get_length(gtk_entry_get_buffer(label));
+  gtk_entry_buffer_delete_text(gtk_entry_get_buffer(label), str_length - 1, 1);
 }
 
 G_MODULE_EXPORT void clear_attention(GtkEntry *entry) {
@@ -96,11 +96,12 @@ G_MODULE_EXPORT void create_graph(GtkButton *button, gpointer input_grid) {
   GtkWidget *field_y_end = gtk_grid_get_child_at(input_grid, 1, 1);
   GtkWidget *field_expression = gtk_grid_get_child_at(input_grid, 0, 2);
 
-  char *str_x_start = (char *)gtk_entry_get_text(field_x_start);
-  char *str_x_end = (char *)gtk_entry_get_text(field_x_end);
-  char *str_y_start = (char *)gtk_entry_get_text(field_y_start);
-  char *str_y_end = (char *)gtk_entry_get_text(field_y_end);
-  char *str_expression = (char *)gtk_entry_get_text(field_expression);
+  char *str_x_start = (char *)gtk_entry_get_text(GTK_ENTRY(field_x_start));
+  char *str_x_end = (char *)gtk_entry_get_text(GTK_ENTRY(field_x_end));
+  char *str_y_start = (char *)gtk_entry_get_text(GTK_ENTRY(field_y_start));
+  char *str_y_end = (char *)gtk_entry_get_text(GTK_ENTRY(field_y_end));
+  char *str_expression =
+      (char *)gtk_entry_get_text(GTK_ENTRY(field_expression));
 
   if (strlen(str_x_start) && strlen(str_x_end) && strlen(str_expression)) {
     int x_start, x_end;
@@ -172,7 +173,7 @@ int main(int argc, char *argv[]) {
   gtk_init(&argc, &argv);
 
   window = create_main_window();
-  gtk_css_provider_load_from_path(provider, "common.css", &errors);
+  gtk_css_provider_load_from_path(provider, "gui/common.css", &errors);
   gtk_style_context_add_provider_for_screen(
       gdk_screen_get_default(), GTK_STYLE_PROVIDER(provider),
       GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
