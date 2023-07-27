@@ -11,7 +11,6 @@ VALGRIND_FLAGS = --log-file="$(VALGRIND_OUTPUT)" --track-origins=yes --trace-chi
 LIBS_FLAGS = -lcheck
 
 SRC_C_FILES = utils/*.c calculate/*.c gui/*.c
-#GUI_C_FILES = gui/*.glade
 TEST_C_FILES = test/*.c
 
 TEST_TARGET  = s21_test
@@ -31,10 +30,8 @@ endif
 all: clean test build gcov_report dist
 
 apply_clang:
-	cp ../materials/linters/.clang-format .
-	clang-format -i *.[ch] || true
-	clang-format -i */*.[ch] || true
-	rm -f .clang-format
+	clang-format --style google -i *.[ch] || true
+	clang-format --style google -i */*.[ch] || true
 
 test: apply_clang $(SRC_C_FILES)
 	$(CC) $(BUILD_FLAGS) $(GTK_FLAGS) $(addprefix -I , $(INCLUDES)) utils/*.c calculate/*.c $(TEST_C_FILES) -o $(TEST_TARGET) $(LIBS_FLAGS)
@@ -65,7 +62,7 @@ uninstall:
 
 install: uninstall build
 	mkdir $(BUILD_DIR)
-	cp $(EXECUTABLE) $(BUILD_DIR)
+	mv $(EXECUTABLE) $(BUILD_DIR)
 
 clean:
 	$(DELETE) $(TEST_TARGET)
