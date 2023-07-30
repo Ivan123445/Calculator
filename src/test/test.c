@@ -16,23 +16,3 @@ int main() {
 
   return 0;
 }
-//
-// #include "../s21_smartcalc.h"
-//
-// void print_stack(Stack *stack) {
-//  if (stack) {
-//    while (stack->prev) {
-//      printf("Type:%d  Value:%f\n", stack->type, stack->value);
-//      stack = stack->prev;
-//    }
-//    printf("Type:%d  Value:%f\n", stack->type, stack->value);
-//  } else {
-//    printf("Stack is empty\n");
-//  }
-//}
-//
-// int main() {
-//     int code = create_coordinate_file("5+x", 0, 10, 11);
-//
-//   return 0;
-// }

@@ -13,6 +13,7 @@ static GtkWidget *create_main_window(void) {
   gtk_builder_connect_signals(builder, NULL);
 
   window = GTK_WIDGET(gtk_builder_get_object(builder, "Main"));
+  g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
   if (!window) {
     g_critical("Ошибка при получении виджета окна");
   }
@@ -50,7 +51,8 @@ G_MODULE_EXPORT void clear_str(GtkButton *button, gpointer label) {
 }
 
 G_MODULE_EXPORT void clear_last_chr(GtkButton *button, gpointer label) {
-  unsigned int str_length = gtk_entry_buffer_get_length(gtk_entry_get_buffer(label));
+  unsigned int str_length =
+      gtk_entry_buffer_get_length(gtk_entry_get_buffer(label));
   gtk_entry_buffer_delete_text(gtk_entry_get_buffer(label), str_length - 1, 1);
 }
 
@@ -173,7 +175,7 @@ int main(int argc, char *argv[]) {
   gtk_init(&argc, &argv);
 
   window = create_main_window();
-  gtk_css_provider_load_from_path(provider, "gui/common.css", &errors);
+  gtk_css_provider_load_from_path(provider, "../src/gui/common.css", &errors);
   gtk_style_context_add_provider_for_screen(
       gdk_screen_get_default(), GTK_STYLE_PROVIDER(provider),
       GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
